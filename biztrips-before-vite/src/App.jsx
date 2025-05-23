@@ -1,108 +1,46 @@
-import React from "react";
-import "./App.css";
-import Footer from "./Footer";
-import Header from "./Header";
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import MyTrips from './pages/MyTrips';
+import AllTrips from './pages/AllTrips';
+import Expenses from './pages/Expenses';
 
-const trips = [
-  {
-    id: 1,
-    title: "BT01",
-    description: "San Francisco World Trade Center on new Server/IOT/Client ",
-    startTrip: [2021, 2, 13, 0, 0],
-    endTrip: [2021, 2, 15, 16, 56],
-    meetings: [
-      {
-        id: 1,
-        title: "One Conference",
-        description: "Key Note on One Conference",
-      },
-      {
-        id: 2,
-        title: "Zero Conference",
-        description: "Workshop Zero on One Conference",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "BT02",
-    description: "Santa Clara Halley on new Server/IOT/Client",
-    startTrip: [2021, 6, 23, 9, 0],
-    endTrip: [2021, 6, 27, 16, 56],
-    meetings: [
-      {
-        id: 3,
-        title: "One Conference",
-        description: "HandsOn on One Conference",
-      },
-      {
-        id: 4,
-        title: "One Conference",
-        description: "Key Note on One Conference",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "BT03",
-    description: "San Cose City Halley on Docker/IOT/Client",
-    startTrip: [2021, 12, 13, 9, 0],
-    endTrip: [2021, 12, 15, 16, 56],
-    meetings: [
-      {
-        id: 5,
-        title: "One Conference",
-        description: "Key Note on One Conference",
-      },
-    ],
-  },
-];
+function App() {
+    const [darkMode, setDarkMode] = useState(() => {
+        return localStorage.getItem('theme') === 'dark';
+    });
 
-export default function App() {
-  function renderTrip(t) {
+    useEffect(() => {
+        document.body.className = darkMode ? 'dark-mode' : 'light-mode';
+        localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+    }, [darkMode]);
+
     return (
-      <div className="product" key={t.id}>
-        <figure>
-          <div>
-            <img src={"images/items/" + t.id + ".jpg"} alt="name " />
-          </div>
-          <figcaption>
-            <a href="#. . . ">{t.title}</a>
-            <div>
-              <span>
-                {t.startTrip[2] + "-" + t.startTrip[1] + "-" + t.startTrip[0]}
-              </span>
-            </div>
-            <p>{t.description}</p>
-            <div>
-              <button type="button" disabled>
-                Add to Triplist
-              </button>
-            </div>
-          </figcaption>
-        </figure>
-      </div>
-    );
-  }
+        <div className="min-vh-100">
+            <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-danger'}`}>
+                <div className="container-fluid">
+                    <Link className="navbar-brand fw-bold text-white" to="/">Business Trips</Link>
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item"><Link className="nav-link text-white" to="/my-trips">My Trips</Link></li>
+                        <li className="nav-item"><Link className="nav-link text-white" to="/all-trips">All Trips</Link></li>
+                        <li className="nav-item"><Link className="nav-link text-white" to="/expenses">Expenses</Link></li>
+                    </ul>
+                    <button className="btn btn-outline-light" onClick={() => setDarkMode(!darkMode)}>
+                        {darkMode ? '☀ Light Mode' : '🌙 Dark Mode'}
+                    </button>
+                </div>
+            </nav>
 
-  return (
-    <>
-      <div>
-        <Header />
-        <main>
-          <section id="filters">
-            <label htmlFor="month">Filter by Month:</label>{" "}
-            <select id="size">
-              <option value="">All months</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-            </select>
-          </section>
-          <section id="products">{trips.map(renderTrip)}</section>
-        </main>
-      </div>
-      <Footer />
-    </>
-  );
+            <div className="container py-4">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/my-trips" element={<MyTrips />} />
+                    <Route path="/all-trips" element={<AllTrips />} />
+                    <Route path="/expenses" element={<Expenses />} />
+                </Routes>
+            </div>
+        </div>
+    );
 }
+
+export default App;
