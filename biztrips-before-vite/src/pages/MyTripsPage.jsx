@@ -1,19 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useAuth } from "../contexts/AuthContext"
-import { bookingsApi } from "../lib/api"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Layout } from "@/components/Layout"
-import { Calendar, MapPin, FileText, Clock, AlertCircle, RefreshCw } from "lucide-react"
+import {useState, useEffect} from "react"
+import {useAuth} from "../contexts/AuthContext"
+import {bookingsApi} from "../lib/api"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
+import {Badge} from "@/components/ui/badge"
+import {Button} from "@/components/ui/button"
+import {Layout} from "@/components/Layout"
+import {Calendar, MapPin, FileText, Clock, AlertCircle, RefreshCw} from "lucide-react"
+import {formatSwissDate, formatSwissDateRange} from "@/lib/utils"
 
 const MyTripsPage = () => {
     const [bookings, setBookings] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
-    const { user } = useAuth()
+    const {user} = useAuth()
 
     useEffect(() => {
         if (user?.id) {
@@ -36,21 +37,6 @@ const MyTripsPage = () => {
             setError("Failed to load your trips. Please try again.")
         } finally {
             setLoading(false)
-        }
-    }
-
-    const formatDate = (dateString) => {
-        if (!dateString) return "N/A"
-        try {
-            const date = new Date(dateString)
-            if (isNaN(date.getTime())) return "Invalid Date"
-            return date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-            })
-        } catch (error) {
-            return "Invalid Date"
         }
     }
 
@@ -83,11 +69,11 @@ const MyTripsPage = () => {
         return (
             <Layout>
                 <div className="text-center py-12">
-                    <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                    <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4"/>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Error Loading Trips</h3>
                     <p className="text-red-600 mb-4">{error}</p>
                     <Button onClick={fetchMyTrips} variant="outline">
-                        <RefreshCw className="h-4 w-4 mr-2" />
+                        <RefreshCw className="h-4 w-4 mr-2"/>
                         Try Again
                     </Button>
                 </div>
@@ -99,15 +85,16 @@ const MyTripsPage = () => {
         <Layout>
             <div className="space-y-6">
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold">My Trips</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Trips</h1>
                     <p className="text-gray-600 dark:text-gray-300">View and manage your booked business trips</p>
                 </div>
 
                 {bookings.length === 0 ? (
                     <div className="text-center py-12">
-                        <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                        <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
                         <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No trips booked yet</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-4">Book your first business trip to get started!</p>
+                        <p className="text-gray-600 dark:text-gray-300 mb-4">Book your first business trip to get
+                            started!</p>
                         <Button onClick={() => (window.location.href = "/trips")}>Browse Available Trips</Button>
                     </div>
                 ) : (
@@ -117,25 +104,29 @@ const MyTripsPage = () => {
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <CardTitle className="text-lg">{booking.businessTrip?.title || "Trip Details"}</CardTitle>
+                                            <CardTitle
+                                                className="text-lg">{booking.businessTrip?.title || "Trip Details"}</CardTitle>
                                             <CardDescription>Booking #{booking.id}</CardDescription>
                                         </div>
-                                        <Badge className={getStatusColor(booking.status)}>{booking.status || "PENDING"}</Badge>
+                                        <Badge
+                                            className={getStatusColor(booking.status)}>{booking.status || "PENDING"}</Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
                                     {booking.businessTrip && (
                                         <>
-                                            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
-                                                <Calendar className="h-4 w-4" />
+                                            <div
+                                                className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
+                                                <Calendar className="h-4 w-4"/>
                                                 <span>
-                          {formatDate(booking.businessTrip.startTrip)} - {formatDate(booking.businessTrip.endTrip)}
+                          {formatSwissDateRange(booking.businessTrip.startTrip, booking.businessTrip.endTrip)}
                         </span>
                                             </div>
 
                                             {booking.businessTrip.location && (
-                                                <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
-                                                    <MapPin className="h-4 w-4" />
+                                                <div
+                                                    className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
+                                                    <MapPin className="h-4 w-4"/>
                                                     <span>{booking.businessTrip.location}</span>
                                                 </div>
                                             )}
@@ -150,14 +141,15 @@ const MyTripsPage = () => {
 
                                     {booking.bookingDate && (
                                         <div className="flex items-center space-x-2 text-sm text-gray-500">
-                                            <Clock className="h-4 w-4" />
-                                            <span>Booked on {formatDate(booking.bookingDate)}</span>
+                                            <Clock className="h-4 w-4"/>
+                                            <span>Booked on {formatSwissDate(booking.bookingDate)}</span>
                                         </div>
                                     )}
 
                                     {booking.notes && (
-                                        <div className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-300">
-                                            <FileText className="h-4 w-4 mt-0.5" />
+                                        <div
+                                            className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-300">
+                                            <FileText className="h-4 w-4 mt-0.5"/>
                                             <span className="line-clamp-2">{booking.notes}</span>
                                         </div>
                                     )}

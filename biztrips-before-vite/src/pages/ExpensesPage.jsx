@@ -9,6 +9,7 @@ import { DollarSign, Calendar, FileText, Plus, Search } from "lucide-react"
 import { Layout } from "@/components/Layout"
 import { AddExpenseDialog } from "@/components/AddExpenseDialog"
 import { expensesApi } from "@/lib/api"
+import { formatSwissDate, formatSwissCurrency } from "@/lib/utils"
 
 export default function ExpensesPage() {
     const [expenses, setExpenses] = useState([])
@@ -46,21 +47,6 @@ export default function ExpensesPage() {
         setExpenses((prev) => [...prev, newExpense])
     }
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        })
-    }
-
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-        }).format(amount)
-    }
-
     const totalExpenses = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0)
 
     if (loading) {
@@ -82,7 +68,7 @@ export default function ExpensesPage() {
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Expenses</h1>
                         <p className="text-gray-600 dark:text-gray-300">Track and manage business trip expenses</p>
                     </div>
-                    <Button onClick={() => setShowAddDialog(true)}>
+                    <Button onClick={() => setShowAddDialog(true)} className="bg-red-600 hover:bg-red-700">
                         <Plus className="h-4 w-4 mr-2" />
                         Add Expense
                     </Button>
@@ -90,38 +76,46 @@ export default function ExpensesPage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Card>
+                    <Card className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                             <div className="flex items-center">
-                                <DollarSign className="h-8 w-8 text-green-600" />
+                                <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                    <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
+                                </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Expenses</p>
-                                    <p className="text-2xl font-bold">{formatCurrency(totalExpenses)}</p>
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                        {formatSwissCurrency(totalExpenses)}
+                                    </p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                             <div className="flex items-center">
-                                <FileText className="h-8 w-8 text-blue-600" />
+                                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                    <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Records</p>
-                                    <p className="text-2xl font-bold">{filteredExpenses.length}</p>
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{filteredExpenses.length}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                             <div className="flex items-center">
-                                <Calendar className="h-8 w-8 text-purple-600" />
+                                <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                                    <Calendar className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300">This Month</p>
-                                    <p className="text-2xl font-bold">
-                                        {formatCurrency(
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                        {formatSwissCurrency(
                                             filteredExpenses
                                                 .filter((expense) => {
                                                     const expenseDate = new Date(expense.date)
@@ -151,7 +145,7 @@ export default function ExpensesPage() {
                 </div>
 
                 {/* Expenses List */}
-                <Card>
+                <Card className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                         <CardTitle>Expense Records</CardTitle>
                         <CardDescription>All business trip expenses and their details</CardDescription>
@@ -165,7 +159,7 @@ export default function ExpensesPage() {
                                     {searchTerm ? "Try adjusting your search terms." : "Start by adding your first expense."}
                                 </p>
                                 {!searchTerm && (
-                                    <Button onClick={() => setShowAddDialog(true)}>
+                                    <Button onClick={() => setShowAddDialog(true)} className="bg-red-600 hover:bg-red-700">
                                         <Plus className="h-4 w-4 mr-2" />
                                         Add Expense
                                     </Button>
@@ -174,22 +168,27 @@ export default function ExpensesPage() {
                         ) : (
                             <div className="space-y-4">
                                 {filteredExpenses.map((expense) => (
-                                    <div key={expense.id} className="flex items-center justify-between p-4 border rounded-lg card-hover">
+                                    <div
+                                        key={expense.id}
+                                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    >
                                         <div className="flex items-center space-x-4">
                                             <div className="flex-shrink-0">
-                                                <DollarSign className="h-8 w-8 text-green-600" />
+                                                <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                                    <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                                </div>
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-gray-900 dark:text-white">{expense.description}</p>
                                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                                     {expense.businessTrip ? expense.businessTrip.title : "No trip assigned"} •{" "}
-                                                    {formatDate(expense.date)}
+                                                    {formatSwissDate(expense.date)}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                                                {formatCurrency(expense.amount)}
+                                                {formatSwissCurrency(expense.amount)}
                                             </p>
                                             {expense.businessTrip && <Badge variant="secondary">Trip #{expense.businessTrip.id}</Badge>}
                                         </div>

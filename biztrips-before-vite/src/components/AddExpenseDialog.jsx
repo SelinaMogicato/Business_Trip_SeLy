@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { expensesApi, tripsApi } from "@/lib/api"
+import { formatSwissCurrency } from "@/lib/utils"
 
 export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
     const [formData, setFormData] = useState({
@@ -137,17 +138,22 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Amount (USD) *</Label>
+                        <Label htmlFor="amount">Amount (CHF) *</Label>
                         <Input
                             id="amount"
                             type="number"
-                            step="0.01"
+                            step="0.05"
                             min="0"
                             placeholder="0.00"
                             value={formData.amount}
                             onChange={(e) => handleInputChange("amount", e.target.value)}
                             required
                         />
+                        {formData.amount && (
+                            <p className="text-sm text-gray-500">
+                                Preview: {formatSwissCurrency(Number.parseFloat(formData.amount) || 0)}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
@@ -184,7 +190,7 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={loading}>
+                        <Button type="submit" disabled={loading} className="bg-red-600 hover:bg-red-700">
                             {loading ? "Creating..." : "Create Expense"}
                         </Button>
                     </DialogFooter>

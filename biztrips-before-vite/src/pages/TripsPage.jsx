@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input.jsx"
+import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Calendar, MapPin, Users, Plus, Search, Filter, MoreVertical, Edit, Trash2 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
@@ -13,6 +13,7 @@ import { CreateTripDialog } from "@/components/CreateTripDialog"
 import { EditTripDialog } from "@/components/EditTripDialog"
 import { BookTripDialog } from "@/components/BookTripDialog"
 import { tripsApi } from "@/lib/api"
+import { formatSwissDateRange } from "@/lib/utils"
 
 export default function TripsPage() {
     const { user } = useAuth()
@@ -67,14 +68,6 @@ export default function TripsPage() {
         }
     }
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-        })
-    }
-
     const handleBookTrip = (trip) => {
         setSelectedTrip(trip)
         setBookDialogOpen(true)
@@ -114,7 +107,6 @@ export default function TripsPage() {
     return (
         <Layout>
             <div className="space-y-8">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Business Trips</h1>
@@ -126,10 +118,8 @@ export default function TripsPage() {
                     </Button>
                 </div>
 
-                {/* Error Message */}
                 {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>}
 
-                {/* Search and Filters */}
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -146,7 +136,6 @@ export default function TripsPage() {
                     </Button>
                 </div>
 
-                {/* Trips Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredTrips.map((trip) => (
                         <Card key={trip.id} className="card-hover">
@@ -182,9 +171,7 @@ export default function TripsPage() {
                                 <div className="space-y-4">
                                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                         <Calendar className="h-4 w-4 mr-2" />
-                                        <span>
-                      {formatDate(trip.startTrip)} - {formatDate(trip.endTrip)}
-                    </span>
+                                        <span>{formatSwissDateRange(trip.startTrip, trip.endTrip)}</span>
                                     </div>
 
                                     <div className="flex items-center justify-between">

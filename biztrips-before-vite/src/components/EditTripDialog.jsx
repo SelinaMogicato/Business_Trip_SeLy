@@ -10,10 +10,11 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input.jsx"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { tripsApi } from "@/lib/api"
+import { formatDateForInput } from "@/lib/utils"
 
 export function EditTripDialog({ open, onOpenChange, trip, onTripUpdated }) {
     const [formData, setFormData] = useState({
@@ -27,14 +28,6 @@ export function EditTripDialog({ open, onOpenChange, trip, onTripUpdated }) {
 
     useEffect(() => {
         if (trip) {
-            // Format dates for datetime-local input
-            const formatDateForInput = (dateString) => {
-                if (!dateString) return ""
-                const date = new Date(dateString)
-                if (isNaN(date.getTime())) return ""
-                return date.toISOString().slice(0, 16)
-            }
-
             setFormData({
                 title: trip.title || "",
                 description: trip.description || "",
@@ -61,6 +54,11 @@ export function EditTripDialog({ open, onOpenChange, trip, onTripUpdated }) {
             // Validate dates
             const startDate = new Date(formData.startTrip)
             const endDate = new Date(formData.endTrip)
+
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                setError("Please enter valid dates")
+                return
+            }
 
             if (startDate >= endDate) {
                 setError("End date must be after start date")

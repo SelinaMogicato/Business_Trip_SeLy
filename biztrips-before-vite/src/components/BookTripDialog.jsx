@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Calendar, Users, AlertCircle, CheckCircle } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { bookingsApi, usersApi } from "../lib/api"
+import { formatSwissDateRange } from "@/lib/utils"
 
 export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
     const [notes, setNotes] = useState("")
@@ -114,21 +115,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
         }
     }
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "N/A"
-        try {
-            const date = new Date(dateString)
-            if (isNaN(date.getTime())) return "Invalid Date"
-            return date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-            })
-        } catch (error) {
-            return "Invalid Date"
-        }
-    }
-
     const handleClose = () => {
         if (!loading) {
             setNotes("")
@@ -163,9 +149,7 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
 
                             <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
                                 <Calendar className="h-4 w-4" />
-                                <span>
-                  {formatDate(trip.startTrip)} - {formatDate(trip.endTrip)}
-                </span>
+                                <span>{formatSwissDateRange(trip.startTrip, trip.endTrip)}</span>
                             </div>
 
                             {trip.meetings && (

@@ -9,17 +9,23 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Plane, Calendar, MapPin, DollarSign, LogOut } from "lucide-react"
+import { Plane, Calendar, MapPin, DollarSign, LogOut, Moon, Sun } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
+import { useTheme } from "@/components/ThemeProvider"
 
 export function Layout({ children }) {
     const { user, logout } = useAuth()
+    const { theme, setTheme } = useTheme()
     const location = useLocation()
     const navigate = useNavigate()
 
     const handleLogout = () => {
         logout()
         navigate("/")
+    }
+
+    const toggleTheme = () => {
+        setTheme(theme === "light" ? "dark" : "light")
     }
 
     const navigation = [
@@ -32,7 +38,7 @@ export function Layout({ children }) {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Navigation */}
-            <nav className="bg-white dark:bg-gray-800 shadow-sm border-b">
+            <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center">
@@ -42,7 +48,7 @@ export function Layout({ children }) {
                             </Link>
                         </div>
 
-                        <div className="hidden md:flex items-center space-x-8">
+                        <div className="hidden md:flex items-center space-x-1">
                             {navigation.map((item) => {
                                 const Icon = item.icon
                                 const isActive = location.pathname === item.href
@@ -50,10 +56,10 @@ export function Layout({ children }) {
                                     <Link
                                         key={item.name}
                                         to={item.href}
-                                        className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                                        className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                                             isActive
-                                                ? "text-red-600 bg-red-50 dark:bg-red-900/20"
-                                                : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                                ? "text-red-600 bg-red-50 dark:bg-red-900/20 shadow-sm"
+                                                : "text-gray-600 hover:text-gray-900 dark:text-gray-300text-gray-300 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                                         }`}
                                     >
                                         <Icon className="h-4 w-4 mr-2" />
@@ -63,12 +69,18 @@ export function Layout({ children }) {
                             })}
                         </div>
 
-                        <div className="flex items-center">
+                        <div className="flex items-center space-x-3">
+                            <Button variant="ghost" size="sm" onClick={toggleTheme} className="h-9 w-9 p-0">
+                                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                <span className="sr-only">Switch theme</span>
+                            </Button>
+
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarFallback>
+                                    <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                                        <Avatar className="h-9 w-9">
+                                            <AvatarFallback className="bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300">
                                                 {user?.firstName?.[0]}
                                                 {user?.lastName?.[0]}
                                             </AvatarFallback>
@@ -82,12 +94,13 @@ export function Layout({ children }) {
                                                 {user?.firstName} {user?.lastName}
                                             </p>
                                             <p className="w-[200px] truncate text-sm text-muted-foreground">{user?.email}</p>
+                                            <p className="text-xs text-muted-foreground">{user?.department}</p>
                                         </div>
                                     </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={handleLogout}>
                                         <LogOut className="mr-2 h-4 w-4" />
-                                        <span>Log out</span>
+                                        <span>Logout</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -95,8 +108,7 @@ export function Layout({ children }) {
                     </div>
                 </div>
 
-                {/* Mobile navigation */}
-                <div className="md:hidden">
+                <div className="md:hidden border-t border-gray-200 dark:border-gray-700">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         {navigation.map((item) => {
                             const Icon = item.icon
@@ -108,7 +120,7 @@ export function Layout({ children }) {
                                     className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
                                         isActive
                                             ? "text-red-600 bg-red-50 dark:bg-red-900/20"
-                                            : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                            : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                                     }`}
                                 >
                                     <Icon className="h-5 w-5 mr-3" />
@@ -120,7 +132,6 @@ export function Layout({ children }) {
                 </div>
             </nav>
 
-            {/* Main content */}
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-6 sm:px-0">{children}</div>
             </main>
