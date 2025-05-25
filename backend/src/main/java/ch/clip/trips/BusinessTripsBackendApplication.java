@@ -41,12 +41,46 @@ public class BusinessTripsBackendApplication {
 			userRepository.save(user2);
 			userRepository.save(user3);
 
-			// Create business trips
-			BusinessTrip bt01 = new BusinessTrip(1L, "Tech Conference San Francisco", "Annual technology conference in San Francisco featuring the latest innovations in AI and cloud computing", LocalDateTime.of(2024, 3, 15, 9, 0), LocalDateTime.of(2024, 3, 18, 17, 0));
-			BusinessTrip bt02 = new BusinessTrip(2L, "Client Meeting New York", "Strategic planning meeting with key clients in New York to discuss Q2 objectives", LocalDateTime.of(2024, 4, 10, 8, 0), LocalDateTime.of(2024, 4, 12, 18, 0));
-			BusinessTrip bt03 = new BusinessTrip(3L, "Product Launch London", "International product launch event in London with global stakeholders", LocalDateTime.of(2024, 5, 20, 10, 0), LocalDateTime.of(2024, 5, 23, 16, 0));
-			BusinessTrip bt04 = new BusinessTrip(4L, "Training Workshop Berlin", "Advanced training workshop on new technologies and methodologies", LocalDateTime.of(2024, 6, 5, 9, 0), LocalDateTime.of(2024, 6, 7, 17, 0));
-			BusinessTrip bt05 = new BusinessTrip(5L, "Partnership Summit Tokyo", "Annual partnership summit with Asian market leaders", LocalDateTime.of(2024, 7, 12, 8, 0), LocalDateTime.of(2024, 7, 16, 19, 0));
+			// Create business trips with enhanced data
+			BusinessTrip bt01 = new BusinessTrip();
+			bt01.setTitle("Tech Conference San Francisco");
+			bt01.setDescription("Annual technology conference in San Francisco featuring the latest innovations in AI and cloud computing");
+			bt01.setStartTrip(LocalDateTime.of(2024, 3, 15, 9, 0));
+			bt01.setEndTrip(LocalDateTime.of(2024, 3, 18, 17, 0));
+			bt01.setLocation("San Francisco, CA");
+			bt01.setMaxParticipants(50);
+
+			BusinessTrip bt02 = new BusinessTrip();
+			bt02.setTitle("Client Meeting New York");
+			bt02.setDescription("Strategic planning meeting with key clients in New York to discuss Q2 objectives");
+			bt02.setStartTrip(LocalDateTime.of(2024, 4, 10, 8, 0));
+			bt02.setEndTrip(LocalDateTime.of(2024, 4, 12, 18, 0));
+			bt02.setLocation("New York, NY");
+			bt02.setMaxParticipants(20);
+
+			BusinessTrip bt03 = new BusinessTrip();
+			bt03.setTitle("Product Launch London");
+			bt03.setDescription("International product launch event in London with global stakeholders");
+			bt03.setStartTrip(LocalDateTime.of(2024, 5, 20, 10, 0));
+			bt03.setEndTrip(LocalDateTime.of(2024, 5, 23, 16, 0));
+			bt03.setLocation("London, UK");
+			bt03.setMaxParticipants(100);
+
+			BusinessTrip bt04 = new BusinessTrip();
+			bt04.setTitle("Training Workshop Berlin");
+			bt04.setDescription("Advanced training workshop on new technologies and methodologies");
+			bt04.setStartTrip(LocalDateTime.of(2024, 6, 5, 9, 0));
+			bt04.setEndTrip(LocalDateTime.of(2024, 6, 7, 17, 0));
+			bt04.setLocation("Berlin, Germany");
+			bt04.setMaxParticipants(30);
+
+			BusinessTrip bt05 = new BusinessTrip();
+			bt05.setTitle("Partnership Summit Tokyo");
+			bt05.setDescription("Annual partnership summit with Asian market leaders");
+			bt05.setStartTrip(LocalDateTime.of(2024, 7, 12, 8, 0));
+			bt05.setEndTrip(LocalDateTime.of(2024, 7, 16, 19, 0));
+			bt05.setLocation("Tokyo, Japan");
+			bt05.setMaxParticipants(75);
 
 			businessTripRepository.save(bt01);
 			businessTripRepository.save(bt02);
@@ -75,6 +109,8 @@ public class BusinessTripsBackendApplication {
 			bookingRepository.save(new Booking(user2, bt03, "Managing product launch activities"));
 			bookingRepository.save(new Booking(user3, bt02, "Leading client relationship discussions"));
 			bookingRepository.save(new Booking(user1, bt04, "Technical training and certification"));
+
+			log.info("Demo data created successfully!");
 		};
 	}
 }

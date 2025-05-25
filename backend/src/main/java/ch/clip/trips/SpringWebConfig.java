@@ -13,10 +13,31 @@ public class SpringWebConfig implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-//		registry.addMapping("/products/*").allowedOrigins("http://localhost:3001");
-		// configure CORS for used endpoints!!!!
-		registry.addMapping("/trips/*").allowedOrigins("*");
-	 	registry.addMapping("/meeting/*").allowedOrigins("*");
-		registry.addMapping("/meeting/items/").allowedOrigins("*");
+		// Configure CORS for all API endpoints
+		registry.addMapping("/api/**")
+				.allowedOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:8080")
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.allowedHeaders("*")
+				.allowCredentials(false)
+				.maxAge(3600);
+
+		// Keep existing configurations for backward compatibility
+		registry.addMapping("/trips/*")
+				.allowedOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:8080")
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.allowedHeaders("*")
+				.allowCredentials(false);
+
+		registry.addMapping("/meeting/*")
+				.allowedOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:8080")
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.allowedHeaders("*")
+				.allowCredentials(false);
+
+		registry.addMapping("/meeting/items/")
+				.allowedOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:8080")
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.allowedHeaders("*")
+				.allowCredentials(false);
 	}
 }
