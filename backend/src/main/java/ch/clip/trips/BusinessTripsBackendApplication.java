@@ -2,8 +2,6 @@ package ch.clip.trips;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import ch.clip.trips.model.*;
 import ch.clip.trips.repo.*;
