@@ -19,12 +19,10 @@ export default function DashboardPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch all trips
                 const tripsResponse = await fetch("http://localhost:8080/api/trips")
                 const tripsData = await tripsResponse.json()
                 setTrips(tripsData)
 
-                // Fetch user's bookings
                 if (user?.id) {
                     const bookingsResponse = await fetch(`http://localhost:8080/api/bookings/user/${user.id}`)
                     const bookingsData = await bookingsResponse.json()
@@ -85,7 +83,6 @@ export default function DashboardPage() {
     return (
         <Layout>
             <div className="space-y-8">
-                {/* Welcome Section */}
                 <div className="bg-gradient-to-r from-red-600 to-red-700 dark:from-red-800 dark:to-red-900 rounded-xl p-8 text-white">
                     <div className="flex items-center justify-between">
                         <div>
@@ -96,7 +93,6 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <Card className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
@@ -158,7 +154,6 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Recent Trips */}
                     <Card className="hover:shadow-lg transition-shadow">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>
@@ -204,7 +199,6 @@ export default function DashboardPage() {
                         </CardContent>
                     </Card>
 
-                    {/* My Bookings */}
                     <Card className="hover:shadow-lg transition-shadow">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div>

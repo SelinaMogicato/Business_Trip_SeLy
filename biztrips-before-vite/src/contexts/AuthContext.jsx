@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        // Check for stored user data on mount
         const storedUser = localStorage.getItem("user")
         if (storedUser) {
             setUser(JSON.parse(storedUser))

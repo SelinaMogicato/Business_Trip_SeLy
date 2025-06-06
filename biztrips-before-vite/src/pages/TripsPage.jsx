@@ -61,7 +61,7 @@ export default function TripsPage() {
 
         try {
             await tripsApi.delete(tripId)
-            await fetchTrips() // Refresh the list
+            await fetchTrips()
         } catch (error) {
             console.error("Error deleting trip:", error)
             setError("Failed to delete trip. Please try again.")

@@ -26,13 +26,11 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
 
     const ensureUserExists = async (user) => {
         try {
-            // Try to get the user from the database
             const dbUser = await usersApi.getById(user.id)
             console.log("User found in database:", dbUser)
             return dbUser
         } catch (error) {
             if (error.message.includes("404") || error.message.includes("not found")) {
-                // User doesn't exist, create them
                 console.log("User not found, creating new user:", user)
                 try {
                     const newUser = await usersApi.create({
@@ -68,10 +66,8 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
         try {
             console.log("Current user:", user)
 
-            // Ensure user exists in database (create if needed)
             const dbUser = await ensureUserExists(user)
 
-            // Create the booking data structure
             const bookingData = {
                 user: { id: dbUser.id },
                 businessTrip: { id: trip.id },
@@ -84,11 +80,9 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
             const result = await bookingsApi.create(bookingData)
             console.log("Booking created successfully:", result)
 
-            // Show success state
             setSuccess(true)
             setNotes("")
 
-            // Close dialog after a short delay
             setTimeout(() => {
                 onTripBooked?.()
                 onOpenChange(false)
@@ -97,7 +91,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
         } catch (error) {
             console.error("Error booking trip:", error)
 
-            // Parse error message for better user feedback
             let errorMessage = "Failed to book trip. Please try again."
             if (error.message.includes("User with ID")) {
                 errorMessage = "Your user account was not found. Please log in again."
@@ -142,7 +135,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
                     </div>
                 ) : (
                     <>
-                        {/* Trip Details */}
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2">
                             <h4 className="font-medium">{trip.title}</h4>
                             <p className="text-sm text-gray-600 dark:text-gray-300">{trip.description}</p>

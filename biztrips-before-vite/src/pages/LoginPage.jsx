@@ -29,13 +29,11 @@ export default function LoginPage() {
 
         try {
             if (isNewUser) {
-                // Validate required fields for new user
                 if (!email.trim() || !firstName.trim() || !lastName.trim() || !department) {
                     setError("All fields are required for new users")
                     return
                 }
 
-                // Create new user
                 const userData = {
                     email: email.trim(),
                     firstName: firstName.trim(),
@@ -47,7 +45,6 @@ export default function LoginPage() {
                 login(user)
                 navigate("/dashboard")
             } else {
-                // Login existing user
                 if (!email.trim()) {
                     setError("Email is required")
                     return
@@ -103,7 +100,6 @@ export default function LoginPage() {
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    {/* Features Section */}
                     <div className="space-y-8">
                         <div className="grid grid-cols-2 gap-6">
                             <Card className="card-hover">
@@ -142,7 +138,6 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    {/* Login Form */}
                     <Card className="w-full max-w-md mx-auto">
                         <CardHeader>
                             <CardTitle>{isNewUser ? "Create Account" : "Welcome Back"}</CardTitle>

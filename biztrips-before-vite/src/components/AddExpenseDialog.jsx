@@ -31,11 +31,10 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
     useEffect(() => {
         if (open) {
             fetchTrips()
-            // Reset form when dialog opens
             setFormData({
                 description: "",
                 amount: "",
-                date: new Date().toISOString().split("T")[0], // Today's date
+                date: new Date().toISOString().split("T")[0],
                 businessTripId: "",
             })
             setError("")
@@ -65,7 +64,6 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
         setError("")
 
         try {
-            // Validate form
             if (!formData.description.trim()) {
                 throw new Error("Description is required")
             }
@@ -79,13 +77,11 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
                 throw new Error("Please select a business trip")
             }
 
-            // Find the selected trip
             const selectedTrip = trips.find((trip) => trip.id.toString() === formData.businessTripId)
             if (!selectedTrip) {
                 throw new Error("Selected business trip not found")
             }
 
-            // Prepare expense data
             const expenseData = {
                 description: formData.description.trim(),
                 amount: Number.parseFloat(formData.amount),
@@ -95,15 +91,12 @@ export function AddExpenseDialog({ open, onOpenChange, onExpenseAdded }) {
 
             console.log("Creating expense with data:", expenseData)
 
-            // Create expense
             const newExpense = await expensesApi.create(expenseData)
 
-            // Notify parent component
             if (onExpenseAdded) {
                 onExpenseAdded(newExpense)
             }
 
-            // Close dialog
             onOpenChange(false)
         } catch (error) {
             console.error("Error creating expense:", error)

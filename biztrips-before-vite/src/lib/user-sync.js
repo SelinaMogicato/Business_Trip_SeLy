@@ -1,18 +1,13 @@
 import { usersApi } from "./api"
 
-/**
- * Utility to sync frontend users with backend database
- */
 export const syncUser = async (frontendUser) => {
     try {
-        // Try to get user by ID first
         try {
             const existingUser = await usersApi.getById(frontendUser.id)
             console.log("User already exists:", existingUser)
             return existingUser
         } catch (error) {
             if (error.message.includes("404")) {
-                // User doesn't exist, create them
                 console.log("Creating new user:", frontendUser)
                 const newUser = await usersApi.create({
                     email: frontendUser.email,
@@ -31,9 +26,6 @@ export const syncUser = async (frontendUser) => {
     }
 }
 
-/**
- * Sync all users from frontend auth to backend database
- */
 export const syncAllUsers = async (users) => {
     const results = []
     for (const user of users) {
@@ -47,9 +39,7 @@ export const syncAllUsers = async (users) => {
     return results
 }
 
-/**
- * Create test users in the database
- */
+
 export const createTestUsers = async () => {
     const testUsers = [
         {

@@ -5,7 +5,6 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs))
 }
 
-// Swiss date formatting (dd.mm.yyyy)
 export function formatSwissDate(dateString) {
     if (!dateString) return "N/A"
     try {
@@ -21,7 +20,6 @@ export function formatSwissDate(dateString) {
     }
 }
 
-// Swiss date and time formatting (dd.mm.yyyy, 24:00)
 export function formatSwissDateTime(dateString) {
     if (!dateString) return "N/A"
     try {
@@ -33,14 +31,13 @@ export function formatSwissDateTime(dateString) {
             year: "numeric",
             hour: "2-digit",
             minute: "2-digit",
-            hour12: false, // 24-hour format
+            hour12: false,
         })
     } catch (error) {
         return "Invalid Date"
     }
 }
 
-// Swiss time only formatting (24:00)
 export function formatSwissTime(dateString) {
     if (!dateString) return "N/A"
     try {
@@ -49,14 +46,13 @@ export function formatSwissTime(dateString) {
         return date.toLocaleTimeString("de-CH", {
             hour: "2-digit",
             minute: "2-digit",
-            hour12: false, // 24-hour format
+            hour12: false,
         })
     } catch (error) {
         return "Invalid Time"
     }
 }
 
-// Swiss currency formatting (CHF)
 export function formatSwissCurrency(amount) {
     if (amount === null || amount === undefined) return "CHF 0.00"
     return new Intl.NumberFormat("de-CH", {
@@ -65,7 +61,6 @@ export function formatSwissCurrency(amount) {
     }).format(amount)
 }
 
-// Short Swiss date formatting for compact displays (dd.mm.yyyy)
 export function formatSwissDateShort(dateString) {
     if (!dateString) return "N/A"
     try {
@@ -81,7 +76,6 @@ export function formatSwissDateShort(dateString) {
     }
 }
 
-// Month name in German (for Swiss formatting)
 export function getSwissMonthName(dateString) {
     if (!dateString) return "N/A"
     try {
@@ -96,20 +90,17 @@ export function getSwissMonthName(dateString) {
     }
 }
 
-// Format date for HTML datetime-local input
 export function formatDateForInput(dateString) {
     if (!dateString) return ""
     try {
         const date = new Date(dateString)
         if (isNaN(date.getTime())) return ""
-        // Format as YYYY-MM-DDTHH:MM for datetime-local input
         return date.toISOString().slice(0, 16)
     } catch (error) {
         return ""
     }
 }
 
-// Format date range in Swiss format
 export function formatSwissDateRange(startDate, endDate) {
     if (!startDate || !endDate) return "N/A"
     try {
@@ -121,7 +112,6 @@ export function formatSwissDateRange(startDate, endDate) {
     }
 }
 
-// Format date and time range in Swiss format
 export function formatSwissDateTimeRange(startDate, endDate) {
     if (!startDate || !endDate) return "N/A"
     try {

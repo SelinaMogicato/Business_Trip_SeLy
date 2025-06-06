@@ -1,6 +1,5 @@
 const API_BASE_URL = "http://localhost:8080/api"
 
-// Generic API request handler with improved error handling
 const apiRequest = async (endpoint, options = {}) => {
     const url = `${API_BASE_URL}${endpoint}`
     const config = {
@@ -25,7 +24,6 @@ const apiRequest = async (endpoint, options = {}) => {
                     errorMessage = errorText
                 }
             } catch (e) {
-                // If we can't read the error text, use the status
                 errorMessage = `HTTP ${response.status}: ${response.statusText}`
             }
 
@@ -33,7 +31,6 @@ const apiRequest = async (endpoint, options = {}) => {
             throw new Error(errorMessage)
         }
 
-        // Handle empty responses (like DELETE)
         if (response.status === 204 || response.headers.get("content-length") === "0") {
             return null
         }
@@ -47,7 +44,6 @@ const apiRequest = async (endpoint, options = {}) => {
     } catch (error) {
         console.error(`API request failed for ${endpoint}:`, error)
 
-        // Provide more user-friendly error messages
         if (error.name === "TypeError" && error.message.includes("fetch")) {
             throw new Error(
                 "Unable to connect to backend server. Please make sure the Spring Boot backend is running on port 8080.",
@@ -58,7 +54,6 @@ const apiRequest = async (endpoint, options = {}) => {
     }
 }
 
-// Business Trips API
 export const tripsApi = {
     getAll: () => apiRequest("/trips"),
     getById: (id) => apiRequest(`/trips/${id}`),
@@ -78,7 +73,6 @@ export const tripsApi = {
         }),
 }
 
-// Bookings API
 export const bookingsApi = {
     getAll: () => apiRequest("/bookings"),
     getById: (id) => apiRequest(`/bookings/${id}`),
@@ -101,7 +95,6 @@ export const bookingsApi = {
     getByUserId: (userId) => apiRequest(`/bookings/user/${userId}`),
 }
 
-// Expenses API
 export const expensesApi = {
     getAll: () => apiRequest("/expenses"),
     getById: (id) => apiRequest(`/expenses/${id}`),
@@ -122,7 +115,6 @@ export const expensesApi = {
     getByTripId: (tripId) => apiRequest(`/expenses/trip/${tripId}`),
 }
 
-// Meetings API
 export const meetingsApi = {
     getAll: () => apiRequest("/meetings"),
     getById: (id) => apiRequest(`/meetings/${id}`),
@@ -143,7 +135,6 @@ export const meetingsApi = {
     getByTripId: (tripId) => apiRequest(`/meetings/trip/${tripId}`),
 }
 
-// Users API
 export const usersApi = {
     getAll: () => apiRequest("/users"),
     getById: (id) => apiRequest(`/users/${id}`),

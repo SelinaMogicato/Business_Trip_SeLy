@@ -39,7 +39,6 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
         setError("")
 
         try {
-            // Validate required fields
             if (!formData.title.trim()) {
                 setError("Trip title is required")
                 return
@@ -50,7 +49,6 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
                 return
             }
 
-            // Validate dates
             const startDate = new Date(formData.startTrip)
             const endDate = new Date(formData.endTrip)
             const now = new Date()
@@ -70,7 +68,6 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
                 return
             }
 
-            // Format data for API
             const tripData = {
                 title: formData.title.trim(),
                 description: formData.description.trim(),
@@ -81,7 +78,6 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
             await tripsApi.create(tripData)
             onTripCreated()
 
-            // Reset form
             setFormData({
                 title: "",
                 description: "",

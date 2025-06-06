@@ -51,7 +51,6 @@ export function EditTripDialog({ open, onOpenChange, trip, onTripUpdated }) {
         setError("")
 
         try {
-            // Validate dates
             const startDate = new Date(formData.startTrip)
             const endDate = new Date(formData.endTrip)
 
@@ -65,7 +64,6 @@ export function EditTripDialog({ open, onOpenChange, trip, onTripUpdated }) {
                 return
             }
 
-            // Format data for API
             const tripData = {
                 ...formData,
                 startTrip: startDate.toISOString(),
