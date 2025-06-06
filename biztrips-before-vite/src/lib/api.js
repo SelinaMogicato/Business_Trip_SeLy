@@ -12,7 +12,6 @@ const apiRequest = async (endpoint, options = {}) => {
     }
 
     try {
-        console.log(`Making API request to: ${url}`, config)
         const response = await fetch(url, config)
 
         if (!response.ok) {
@@ -77,7 +76,6 @@ export const bookingsApi = {
     getAll: () => apiRequest("/bookings"),
     getById: (id) => apiRequest(`/bookings/${id}`),
     create: (bookingData) => {
-        console.log("Creating booking with data:", bookingData)
         return apiRequest("/bookings", {
             method: "POST",
             body: JSON.stringify(bookingData),

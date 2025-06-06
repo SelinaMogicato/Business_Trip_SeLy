@@ -4,18 +4,15 @@ export const syncUser = async (frontendUser) => {
     try {
         try {
             const existingUser = await usersApi.getById(frontendUser.id)
-            console.log("User already exists:", existingUser)
             return existingUser
         } catch (error) {
             if (error.message.includes("404")) {
-                console.log("Creating new user:", frontendUser)
                 const newUser = await usersApi.create({
                     email: frontendUser.email,
                     firstName: frontendUser.firstName,
                     lastName: frontendUser.lastName,
                     department: frontendUser.department || "Unknown",
                 })
-                console.log("User created successfully:", newUser)
                 return newUser
             }
             throw error
@@ -67,10 +64,8 @@ export const createTestUsers = async () => {
         try {
             const user = await usersApi.create(userData)
             results.push({ success: true, user })
-            console.log("Created test user:", user)
         } catch (error) {
             results.push({ success: false, userData, error: error.message })
-            console.error("Failed to create test user:", userData, error)
         }
     }
 

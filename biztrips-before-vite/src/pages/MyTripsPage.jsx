@@ -27,13 +27,10 @@ const MyTripsPage = () => {
             setLoading(true)
             setError("")
 
-            console.log("Fetching bookings for user:", user.id)
             const data = await bookingsApi.getByUserId(user.id)
-            console.log("Fetched bookings:", data)
 
             setBookings(Array.isArray(data) ? data : [])
         } catch (error) {
-            console.error("Error fetching my trips:", error)
             setError("Failed to load your trips. Please try again.")
         } finally {
             setLoading(false)

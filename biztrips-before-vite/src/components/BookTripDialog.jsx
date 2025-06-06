@@ -27,11 +27,9 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
     const ensureUserExists = async (user) => {
         try {
             const dbUser = await usersApi.getById(user.id)
-            console.log("User found in database:", dbUser)
             return dbUser
         } catch (error) {
             if (error.message.includes("404") || error.message.includes("not found")) {
-                console.log("User not found, creating new user:", user)
                 try {
                     const newUser = await usersApi.create({
                         email: user.email,
@@ -39,10 +37,8 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
                         lastName: user.lastName,
                         department: user.department || "Unknown",
                     })
-                    console.log("User created successfully:", newUser)
                     return newUser
                 } catch (createError) {
-                    console.error("Failed to create user:", createError)
                     throw new Error("Failed to create user account")
                 }
             } else {
@@ -64,7 +60,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
         setSuccess(false)
 
         try {
-            console.log("Current user:", user)
 
             const dbUser = await ensureUserExists(user)
 
@@ -75,10 +70,8 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
                 status: "PENDING",
             }
 
-            console.log("Sending booking data:", bookingData)
 
             const result = await bookingsApi.create(bookingData)
-            console.log("Booking created successfully:", result)
 
             setSuccess(true)
             setNotes("")
@@ -89,7 +82,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
                 setSuccess(false)
             }, 2000)
         } catch (error) {
-            console.error("Error booking trip:", error)
 
             let errorMessage = "Failed to book trip. Please try again."
             if (error.message.includes("User with ID")) {
