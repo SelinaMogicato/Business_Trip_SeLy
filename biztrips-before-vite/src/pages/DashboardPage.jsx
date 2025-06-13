@@ -4,11 +4,11 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Users, TrendingUp, Plus, Clock, CheckCircle, Plane } from "lucide-react"
+import { Calendar, MapPin, Users, TrendingUp, Plus, CheckCircle, Plane } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { Layout } from "@/components/Layout"
 import { Link } from "react-router-dom"
-import { formatSwissDate, formatSwissDateRange } from "@/lib/utils"
+import { formatSwissDate } from "@/lib/utils"
 
 export default function DashboardPage() {
     const { user } = useAuth()
@@ -37,38 +37,6 @@ export default function DashboardPage() {
 
         fetchData()
     }, [user])
-
-    const getStatusColor = (status) => {
-        switch (status?.toLowerCase()) {
-            case "confirmed":
-            case "approved":
-                return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-            case "pending":
-                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-            case "rejected":
-            case "cancelled":
-                return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-            default:
-                return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
-        }
-    }
-
-    const getStatusText = (status) => {
-        switch (status?.toLowerCase()) {
-            case "confirmed":
-                return "Confirmed"
-            case "pending":
-                return "Pending"
-            case "approved":
-                return "Approved"
-            case "rejected":
-                return "Rejected"
-            case "cancelled":
-                return "Cancelled"
-            default:
-                return status || "Unknown"
-        }
-    }
 
     if (loading) {
         return (
@@ -126,12 +94,12 @@ export default function DashboardPage() {
                         <CardContent className="p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                                    <Clock className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                                    <MapPin className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
                                 </div>
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Pending</p>
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Locations</p>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        {myBookings.filter((b) => b.status?.toLowerCase() === "pending").length}
+                                        {trips.filter((trip) => trip.location).length}
                                     </p>
                                 </div>
                             </div>
@@ -181,11 +149,13 @@ export default function DashboardPage() {
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{trip.title}</p>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                {formatSwissDateRange(trip.startTrip, trip.endTrip)}
+                                                {trip.startTrip && trip.endTrip
+                                                    ? `${formatSwissDate(trip.startTrip)} - ${formatSwissDate(trip.endTrip)}`
+                                                    : "Date range not available"}
                                             </p>
                                         </div>
                                         <div className="flex-shrink-0">
-                                            <Badge variant="secondary">{trip.meetings?.length || 0} meetings</Badge>
+                                            <Badge variant="secondary">{trip.location || "No location"}</Badge>
                                         </div>
                                     </div>
                                 ))}
@@ -239,7 +209,7 @@ export default function DashboardPage() {
                                                 </p>
                                             </div>
                                             <div className="flex-shrink-0">
-                                                <Badge className={getStatusColor(booking.status)}>{getStatusText(booking.status)}</Badge>
+                                                <Badge variant="secondary">{booking.businessTrip?.location || "No location"}</Badge>
                                             </div>
                                         </div>
                                     ))

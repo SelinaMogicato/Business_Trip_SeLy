@@ -54,22 +54,61 @@ const apiRequest = async (endpoint, options = {}) => {
 }
 
 export const tripsApi = {
-    getAll: () => apiRequest("/trips"),
-    getById: (id) => apiRequest(`/trips/${id}`),
-    create: (tripData) =>
-        apiRequest("/trips", {
+    list: async () => {
+        const response = await fetch(`${API_BASE_URL}/trips`)
+        if (!response.ok) {
+            throw new Error(`Failed to fetch trips: ${response.status} ${response.statusText}`)
+        }
+        return response.json()
+    },
+    get: async (id) => {
+        const response = await fetch(`${API_BASE_URL}/trips/${id}`)
+        if (!response.ok) {
+            throw new Error(`Failed to fetch trip: ${response.status} ${response.statusText}`)
+        }
+        return response.json()
+    },
+    create: async (tripData) => {
+        const response = await fetch(`${API_BASE_URL}/trips`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(tripData),
-        }),
-    update: (id, tripData) =>
-        apiRequest(`/trips/${id}`, {
+        })
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            throw new Error(`Failed to create trip: ${response.status} ${response.statusText}`)
+        }
+
+        return response.json()
+    },
+    update: async (id, tripData) => {
+        const response = await fetch(`${API_BASE_URL}/trips/${id}`, {
             method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(tripData),
-        }),
-    delete: (id) =>
-        apiRequest(`/trips/${id}`, {
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to update trip: ${response.status} ${response.statusText}`)
+        }
+        return response.json()
+    },
+    delete: async (id) => {
+        const response = await fetch(`${API_BASE_URL}/trips/${id}`, {
             method: "DELETE",
-        }),
+        })
+        if (!response.ok) {
+            throw new Error(`Failed to delete trip: ${response.status} ${response.statusText}`)
+        }
+        return response.json()
+    },
+    getAll: async () => {
+        return tripsApi.list()
+    },
 }
 
 export const bookingsApi = {
@@ -111,26 +150,6 @@ export const expensesApi = {
             method: "DELETE",
         }),
     getByTripId: (tripId) => apiRequest(`/expenses/trip/${tripId}`),
-}
-
-export const meetingsApi = {
-    getAll: () => apiRequest("/meetings"),
-    getById: (id) => apiRequest(`/meetings/${id}`),
-    create: (meetingData) =>
-        apiRequest("/meetings", {
-            method: "POST",
-            body: JSON.stringify(meetingData),
-        }),
-    update: (id, meetingData) =>
-        apiRequest(`/meetings/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(meetingData),
-        }),
-    delete: (id) =>
-        apiRequest(`/meetings/${id}`, {
-            method: "DELETE",
-        }),
-    getByTripId: (tripId) => apiRequest(`/meetings/trip/${tripId}`),
 }
 
 export const usersApi = {

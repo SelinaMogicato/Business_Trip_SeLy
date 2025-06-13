@@ -5,51 +5,29 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs))
 }
 
-export function formatSwissDate(dateString) {
-    if (!dateString) return "N/A"
-    try {
-        const date = new Date(dateString)
-        if (isNaN(date.getTime())) return "Invalid Date"
-        return date.toLocaleDateString("de-CH", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        })
-    } catch (error) {
-        return "Invalid Date"
-    }
-}
+export function formatSwissDate(dateInput) {
+    if (!dateInput) return "Date not available"
 
-export function formatSwissDateTime(dateString) {
-    if (!dateString) return "N/A"
     try {
-        const date = new Date(dateString)
-        if (isNaN(date.getTime())) return "Invalid Date"
-        return date.toLocaleString("de-CH", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        })
-    } catch (error) {
-        return "Invalid Date"
-    }
-}
+        let date
 
-export function formatSwissTime(dateString) {
-    if (!dateString) return "N/A"
-    try {
-        const date = new Date(dateString)
-        if (isNaN(date.getTime())) return "Invalid Time"
-        return date.toLocaleTimeString("de-CH", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        })
+        if (Array.isArray(dateInput)) {
+            const [year, month, day] = dateInput
+            date = new Date(year, month - 1, day)
+        } else {
+            date = new Date(dateInput)
+        }
+
+        if (isNaN(date.getTime())) return "Date not available"
+
+        const day = date.getDate().toString().padStart(2, "0")
+        const month = (date.getMonth() + 1).toString().padStart(2, "0")
+        const year = date.getFullYear()
+
+        return `${day}.${month}.${year}`
     } catch (error) {
-        return "Invalid Time"
+        console.error("Error formatting date:", error, dateInput)
+        return "Date not available"
     }
 }
 
@@ -61,64 +39,39 @@ export function formatSwissCurrency(amount) {
     }).format(amount)
 }
 
-export function formatSwissDateShort(dateString) {
-    if (!dateString) return "N/A"
-    try {
-        const date = new Date(dateString)
-        if (isNaN(date.getTime())) return "Invalid"
-        return date.toLocaleDateString("de-CH", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        })
-    } catch (error) {
-        return "Invalid"
-    }
-}
+export function formatDateForInput(dateInput) {
+    if (!dateInput) return ""
 
-export function getSwissMonthName(dateString) {
-    if (!dateString) return "N/A"
     try {
-        const date = new Date(dateString)
-        if (isNaN(date.getTime())) return "Invalid"
-        return date.toLocaleDateString("de-CH", {
-            month: "long",
-            year: "numeric",
-        })
-    } catch (error) {
-        return "Invalid"
-    }
-}
+        let date
 
-export function formatDateForInput(dateString) {
-    if (!dateString) return ""
-    try {
-        const date = new Date(dateString)
+        if (Array.isArray(dateInput)) {
+            const [year, month, day] = dateInput
+            date = new Date(year, month - 1, day)
+        } else {
+            date = new Date(dateInput)
+        }
+
         if (isNaN(date.getTime())) return ""
-        return date.toISOString().slice(0, 16)
+
+        const year = date.getFullYear()
+        const month = (date.getMonth() + 1).toString().padStart(2, "0")
+        const day = date.getDate().toString().padStart(2, "0")
+
+        return `${year}-${month}-${day}`
     } catch (error) {
+        console.error("Error formatting date for input:", error, dateInput)
         return ""
     }
 }
 
 export function formatSwissDateRange(startDate, endDate) {
-    if (!startDate || !endDate) return "N/A"
-    try {
-        const start = formatSwissDate(startDate)
-        const end = formatSwissDate(endDate)
-        return `${start} - ${end}`
-    } catch (error) {
-        return "Invalid Date Range"
-    }
-}
+    if (!startDate || !endDate) return "Date range not available"
 
-export function formatSwissDateTimeRange(startDate, endDate) {
-    if (!startDate || !endDate) return "N/A"
     try {
-        const start = formatSwissDateTime(startDate)
-        const end = formatSwissDateTime(endDate)
-        return `${start} - ${end}`
+        return `${formatSwissDate(startDate)} - ${formatSwissDate(endDate)}`
     } catch (error) {
-        return "Invalid Date Range"
+        console.error("Error formatting date range:", error, startDate, endDate)
+        return "Date range not available"
     }
 }

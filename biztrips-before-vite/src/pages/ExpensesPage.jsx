@@ -62,7 +62,6 @@ export default function ExpensesPage() {
     return (
         <Layout>
             <div className="space-y-8">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Expenses</h1>
@@ -74,7 +73,6 @@ export default function ExpensesPage() {
                     </Button>
                 </div>
 
-                {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
@@ -133,7 +131,6 @@ export default function ExpensesPage() {
                     </Card>
                 </div>
 
-                {/* Search */}
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                     <Input
@@ -144,7 +141,6 @@ export default function ExpensesPage() {
                     />
                 </div>
 
-                {/* Expenses List */}
                 <Card className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                         <CardTitle>Expense Records</CardTitle>
@@ -199,7 +195,6 @@ export default function ExpensesPage() {
                     </CardContent>
                 </Card>
 
-                {/* Add Expense Dialog */}
                 <AddExpenseDialog open={showAddDialog} onOpenChange={setShowAddDialog} onExpenseAdded={handleExpenseAdded} />
             </div>
         </Layout>

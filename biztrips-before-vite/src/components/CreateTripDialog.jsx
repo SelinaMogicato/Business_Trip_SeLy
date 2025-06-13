@@ -19,18 +19,16 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
+        location: "",
         startTrip: "",
         endTrip: "",
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
-    const handleInputChange = (e) => {
+    const handleChange = (e) => {
         const { name, value } = e.target
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }))
+        setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
     const handleSubmit = async (e) => {
@@ -39,114 +37,97 @@ export function CreateTripDialog({ open, onOpenChange, onTripCreated }) {
         setError("")
 
         try {
-            if (!formData.title.trim()) {
-                setError("Trip title is required")
-                return
+            const formattedData = {
+                ...formData,
+                startTrip: formData.startTrip ? `${formData.startTrip}T00:00:00` : null,
+                endTrip: formData.endTrip ? `${formData.endTrip}T23:59:59` : null,
             }
 
-            if (!formData.startTrip || !formData.endTrip) {
-                setError("Start and end dates are required")
-                return
-            }
 
-            const startDate = new Date(formData.startTrip)
-            const endDate = new Date(formData.endTrip)
-            const now = new Date()
+            const result = await tripsApi.create(formattedData)
 
-            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-                setError("Please enter valid dates")
-                return
-            }
-
-            if (startDate <= now) {
-                setError("Start date must be in the future")
-                return
-            }
-
-            if (startDate >= endDate) {
-                setError("End date must be after start date")
-                return
-            }
-
-            const tripData = {
-                title: formData.title.trim(),
-                description: formData.description.trim(),
-                startTrip: startDate.toISOString(),
-                endTrip: endDate.toISOString(),
-            }
-
-            await tripsApi.create(tripData)
-            onTripCreated()
-
-            setFormData({
-                title: "",
-                description: "",
-                startTrip: "",
-                endTrip: "",
-            })
+            onTripCreated(result)
         } catch (error) {
-            console.error("Error creating trip:", error)
             setError("Failed to create trip. Please try again.")
         } finally {
             setLoading(false)
         }
     }
 
+    const resetForm = () => {
+        setFormData({
+            title: "",
+            description: "",
+            location: "",
+            startTrip: "",
+            endTrip: "",
+        })
+        setError("")
+    }
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+        <Dialog
+            open={open}
+            onOpenChange={(isOpen) => {
+                if (!isOpen) resetForm()
+                onOpenChange(isOpen)
+            }}
+        >
+            <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>Create New Trip</DialogTitle>
-                    <DialogDescription>Add a new business trip for your team to book.</DialogDescription>
+                    <DialogTitle>Create New Business Trip</DialogTitle>
+                    <DialogDescription>Add details for a new business trip opportunity.</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit}>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="title">Trip Title</Label>
-                            <Input
-                                id="title"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleInputChange}
-                                placeholder="Enter trip title"
-                                required
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="description">Description</Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleInputChange}
-                                placeholder="Enter trip description"
-                                rows={3}
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="startTrip">Start Date & Time</Label>
+
+                <form onSubmit={handleSubmit} className="space-y-4 py-4">
+                    {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>}
+
+                    <div className="space-y-2">
+                        <Label htmlFor="title">Trip Title</Label>
+                        <Input id="title" name="title" value={formData.title} onChange={handleChange} required />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="location">Location</Label>
+                        <Input id="location" name="location" value={formData.location} onChange={handleChange} required />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="startTrip">Start Date</Label>
                             <Input
                                 id="startTrip"
                                 name="startTrip"
-                                type="datetime-local"
+                                type="date"
                                 value={formData.startTrip}
-                                onChange={handleInputChange}
+                                onChange={handleChange}
                                 required
                             />
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="endTrip">End Date & Time</Label>
+                        <div className="space-y-2">
+                            <Label htmlFor="endTrip">End Date</Label>
                             <Input
                                 id="endTrip"
                                 name="endTrip"
-                                type="datetime-local"
+                                type="date"
                                 value={formData.endTrip}
-                                onChange={handleInputChange}
+                                onChange={handleChange}
                                 required
                             />
                         </div>
-                        {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
                     </div>
+
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel

@@ -67,7 +67,6 @@ export function BookTripDialog({ open, onOpenChange, trip, onTripBooked }) {
                 user: { id: dbUser.id },
                 businessTrip: { id: trip.id },
                 notes: notes.trim() || "",
-                status: "PENDING",
             }
 
 
