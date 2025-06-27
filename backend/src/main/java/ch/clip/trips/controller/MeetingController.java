@@ -1,102 +1,59 @@
 package ch.clip.trips.controller;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import ch.clip.trips.ex.TriptNotFoundException;
 import ch.clip.trips.model.Meeting;
 import ch.clip.trips.repo.MeetingRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/api/meetings")
 public class MeetingController {
-	private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
 
-	@Autowired
-	private MeetingRepository meetingRepository;
+	private final MeetingRepository meetingRepo;
 
-
-
-	/**
-	 * Method that returns the list of meetings in the current trip
-	 *
-	 * @return List of meetings
-	 */
-	//@CrossOrigin(origins ="http://localhost:3001")
-	// @RequestMapping(value = "/meetings", method = RequestMethod.GET, produces =
-	// "application/json")
-	@GetMapping("/meetings")
-	List<Meeting> allItems() {
-		log.info("hello meetings");
-		return (List<Meeting>) meetingRepository.findAll();
-
+	public MeetingController(MeetingRepository meetingRepo) {
+		this.meetingRepo = meetingRepo;
 	}
 
-	/**
-	 * add a new Item to the list
-	 *
-	 * @param newItem Request object
-	 * @return true/false
-	 */
-	@CrossOrigin(origins = "http://localhost:3001")
-	@PostMapping("/meetings")
-	Meeting newItem(@RequestBody Meeting newItem) {
-		return meetingRepository.save(newItem);
+	@GetMapping
+	public List<Meeting> getAllMeetings() {
+		return meetingRepo.findAll();
 	}
 
-	// single Item
-	@GetMapping("/meetings/{id}")
-	Meeting one(@PathVariable Long id) {
-		return meetingRepository.findById(id).orElseThrow(() -> new TriptNotFoundException(id));
+	@GetMapping("/{id}")
+	public ResponseEntity<Meeting> getMeetingById(@PathVariable Long id) {
+		return meetingRepo.findById(id)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping("/meetings/{id}")
-	Meeting replaceItem(@RequestBody Meeting newItem, @PathVariable Long id) {
-		return meetingRepository.findById(id).map(item -> {
-			item.setTitle(newItem.getTitle());
-			item.setDescription(newItem.getDescription());
-			return meetingRepository.save(item);
-
-		}).orElseGet(() -> {
-			newItem.setId(id);
-			return meetingRepository.save(newItem);
-		});
+	@PostMapping
+	public ResponseEntity<Meeting> createMeeting(@RequestBody Meeting meeting) {
+		return ResponseEntity.ok(meetingRepo.save(meeting));
 	}
 
-	/**
-	 * Method that deletes an item from the repo
-	 *
-	 * @param request Request object
-	 * @return Status boolean
-	 */
-	@CrossOrigin(origins = "http://localhost:3001")
-	@DeleteMapping("/meetings/{id}")
-	void deleteItem(@PathVariable Long id) {
-		meetingRepository.deleteById(id);
+	@PutMapping("/{id}")
+	public ResponseEntity<Meeting> updateMeeting(@PathVariable Long id, @RequestBody Meeting newMeeting) {
+		return meetingRepo.findById(id)
+				.map(meeting -> {
+					meeting.setTitle(newMeeting.getTitle());
+					meeting.setDescription(newMeeting.getDescription());
+					meeting.setBusinessTrip(newMeeting.getBusinessTrip());
+					return ResponseEntity.ok(meetingRepo.save(meeting));
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
 
-	/**
-	 * Method that empties the repo
-	 *
-	 * @return Status string
-	 */
-	@CrossOrigin(origins = "http://localhost:3001")
-	@DeleteMapping("/meetings")
-	void clearAll() {
-		log.info("hello");
-		meetingRepository.deleteAll();
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteMeeting(@PathVariable Long id) {
+		if (meetingRepo.existsById(id)) {
+			meetingRepo.deleteById(id);
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
-
 }

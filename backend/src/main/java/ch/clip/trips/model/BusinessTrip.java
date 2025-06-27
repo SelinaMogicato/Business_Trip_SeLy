@@ -1,44 +1,54 @@
 package ch.clip.trips.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import lombok.Data;
-
-@Data
 @Entity
-public class BusinessTrip implements Serializable {
+@Table(name = "business_trip")
+public class BusinessTrip {
 
-//	private static final long serialVersionUID = 67027563808382509L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "title", nullable = false)
 	private String title;
+
+	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
+
+	@Column(name = "start_trip")
 	private LocalDateTime startTrip;
+
+	@Column(name = "end_trip")
 	private LocalDateTime endTrip;
 
-	@OneToMany(mappedBy = "businessTrip")
-	@JsonManagedReference
+	@Column(name = "location")
+	private String location;
+
+	@Column(name = "max_participants")
+	private Integer maxParticipants;
+
+	@OneToMany(mappedBy = "businessTrip", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({"businessTrip", "user"})
+	private List<Booking> bookings;
+
+	@OneToMany(mappedBy = "businessTrip", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({"businessTrip"})
 	private List<Meeting> meetings;
 
+	@OneToMany(mappedBy = "businessTrip", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({"businessTrip"})
+	private List<Expense> expenses;
 
-	public BusinessTrip() {
-		super();
+	// Constructors
+	public BusinessTrip() {}
 
-	}
-
+	// Original constructor for backward compatibility
 	public BusinessTrip(Long id, String title, String description, LocalDateTime startTrip, LocalDateTime endTrip) {
-		this();
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -46,8 +56,17 @@ public class BusinessTrip implements Serializable {
 		this.endTrip = endTrip;
 	}
 
+	// New constructor with additional fields
+	public BusinessTrip(String title, String description, LocalDateTime startTrip, LocalDateTime endTrip, String location, Integer maxParticipants) {
+		this.title = title;
+		this.description = description;
+		this.startTrip = startTrip;
+		this.endTrip = endTrip;
+		this.location = location;
+		this.maxParticipants = maxParticipants;
+	}
 
-
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -72,16 +91,6 @@ public class BusinessTrip implements Serializable {
 		this.description = description;
 	}
 
-	public List<Meeting> getMeetings() {
-		return meetings;
-	}
-
-	public void setMeetings(List<Meeting> meetings) {
-		this.meetings = meetings;
-	}
-
-
-
 	public LocalDateTime getStartTrip() {
 		return startTrip;
 	}
@@ -98,12 +107,56 @@ public class BusinessTrip implements Serializable {
 		this.endTrip = endTrip;
 	}
 
-	@Override
-	public String toString() {
-		return "BusinessTrip [id=" + id + ", title=" + title + ", description=" + description + ", startTrip="
-				+ startTrip + ", endTrip=" + endTrip + ", meetings=" + meetings + "]";
+	public String getLocation() {
+		return location;
 	}
 
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
+	public Integer getMaxParticipants() {
+		return maxParticipants;
+	}
 
+	public void setMaxParticipants(Integer maxParticipants) {
+		this.maxParticipants = maxParticipants;
+	}
+
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
+
+	public List<Meeting> getMeetings() {
+		return meetings;
+	}
+
+	public void setMeetings(List<Meeting> meetings) {
+		this.meetings = meetings;
+	}
+
+	public List<Expense> getExpenses() {
+		return expenses;
+	}
+
+	public void setExpenses(List<Expense> expenses) {
+		this.expenses = expenses;
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessTrip{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", description='" + description + '\'' +
+				", startTrip=" + startTrip +
+				", endTrip=" + endTrip +
+				", location='" + location + '\'' +
+				", maxParticipants=" + maxParticipants +
+				'}';
+	}
 }
