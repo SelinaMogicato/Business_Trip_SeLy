@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Calendar, MapPin, Users, TrendingUp, Plus, CheckCircle, Plane } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { Layout } from "@/components/Layout"
@@ -155,7 +154,6 @@ export default function DashboardPage() {
                                             </p>
                                         </div>
                                         <div className="flex-shrink-0">
-                                            <Badge variant="secondary">{trip.location || "No location"}</Badge>
                                         </div>
                                     </div>
                                 ))}
@@ -207,9 +205,6 @@ export default function DashboardPage() {
                                                 <p className="text-sm text-gray-500 dark:text-gray-400">
                                                     Booked on {formatSwissDate(booking.bookingDate)}
                                                 </p>
-                                            </div>
-                                            <div className="flex-shrink-0">
-                                                <Badge variant="secondary">{booking.businessTrip?.location || "No location"}</Badge>
                                             </div>
                                         </div>
                                     ))

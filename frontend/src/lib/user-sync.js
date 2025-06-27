@@ -1,7 +1,6 @@
-// Import der User-API-Methoden (z. B. getById, create etc.)
 import { usersApi } from "./api"
 
-// 🔄 syncUser(): Synchronisiert einen Benutzer mit dem Backend
+// syncUser(): Synchronisiert einen Benutzer mit dem Backend
 // Prüft, ob der User bereits im Backend existiert. Wenn nicht, wird er neu erstellt.
 export const syncUser = async (frontendUser) => {
     try {
@@ -29,8 +28,8 @@ export const syncUser = async (frontendUser) => {
     }
 }
 
-// 🔁 syncAllUsers(): synchronisiert eine ganze Benutzerliste
-// Wird z. B. verwendet, wenn mehrere Benutzer auf einmal geprüft oder angelegt werden sollen
+// syncAllUsers(): synchronisiert eine ganze Benutzerliste
+// Wird z.B. verwendet, wenn mehrere Benutzer auf einmal geprüft oder angelegt werden sollen
 export const syncAllUsers = async (users) => {
     const results = []
     for (const user of users) {

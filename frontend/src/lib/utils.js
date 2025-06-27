@@ -6,7 +6,7 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs))
 }
 
-// Formatiert ein Datum im Schweizer Format: z. B. 20.06.2025
+// Formatiert ein Datum im Schweizer Format: z.B. 20.06.2025
 export function formatSwissDate(dateInput) {
     if (!dateInput) return "Date not available"
 
@@ -36,7 +36,7 @@ export function formatSwissDate(dateInput) {
     }
 }
 
-// Formatiert Beträge im Schweizer Währungsformat: z. B. CHF 1’000.00
+// Formatiert Beträge im Schweizer Währungsformat: z.B. CHF 1’000.00
 export function formatSwissCurrency(amount) {
     if (amount === null || amount === undefined) return "CHF 0.00"
     return new Intl.NumberFormat("de-CH", {

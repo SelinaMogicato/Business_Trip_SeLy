@@ -152,7 +152,6 @@ export default function TripsPage() {
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <CardTitle className="text-lg">{trip.title}</CardTitle>
-                                        {/* Removed status badge as requested */}
                                     </div>
                                     <CardDescription>Trip #{trip.id}</CardDescription>
                                 </CardHeader>

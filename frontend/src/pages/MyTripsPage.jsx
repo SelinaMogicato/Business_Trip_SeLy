@@ -87,7 +87,6 @@ const MyTripsPage = () => {
                                             <CardTitle className="text-lg">{booking.businessTrip?.title || "Trip Details"}</CardTitle>
                                             <CardDescription>Booking #{booking.id}</CardDescription>
                                         </div>
-                                        {/* Status badge removed as requested */}
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
